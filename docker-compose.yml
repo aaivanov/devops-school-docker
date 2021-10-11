@@ -1,0 +1,42 @@
+version: '3.9'
+services:
+  database:
+    image: postgres
+    restart: always
+    networks:
+      - backend
+    environment:
+      POSTGRES_PASSWORD: django
+      POSTGRES_USER: django
+      POSTGRES_DB: django
+
+  lib_catalog:
+    image: "lib_catalog:latest"
+    restart: always
+    build: 
+      context: .
+      dockerfile: Dockerfile_lib_catalog
+    ports: 
+      - 8000:8000
+    depends_on:
+      - database
+    networks:
+      - backend
+
+  frontend:
+    image: "frontend:latest"
+    restart: always
+    build: 
+      context: .
+      dockerfile: Dockerfile_frontend
+    stdin_open: true
+    ports:
+      - 3000:3000
+    depends_on:
+      - database
+      - lib_catalog
+    networks:
+      - backend
+      
+networks:
+  backend:

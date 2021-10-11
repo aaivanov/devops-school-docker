@@ -1,0 +1,21 @@
+version: '3.9'
+services:
+  database:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: django
+      POSTGRES_USER: django
+      POSTGRES_DB: django
+
+  lib_catalog_test:
+    image: lib_catalog:latest
+    build: 
+      context: .
+      dockerfile: Dockerfile_lib_catalog
+    restart: always
+    ports: 
+      - 8000:8000
+    depends_on:
+      - database
+
