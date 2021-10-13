@@ -1,9 +1,12 @@
 FROM node:12-alpine
+RUN mkdir /app && chown -R node:node /app
+
+USER node
 WORKDIR /app
-COPY docker_homework/frontend/package.json /app/package.json
+
+COPY --chown=node:node docker_homework/frontend/package.json /app/package.json
 RUN npm install --only=prod
 
-COPY docker_homework/frontend/. /app
-
+COPY --chown=node:node docker_homework/frontend/. /app
 
 CMD npm run start 2>&1| tee npm.txt
